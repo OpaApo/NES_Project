@@ -16,5 +16,29 @@ namespace NES_Suntracker_Console
         {
             InitializeComponent();
         }
+
+        private void trackeralgoOverride_chkbx_CheckedChanged(object sender, EventArgs e)
+        {
+            if(trackeralgoOverride_chkbx.Checked)
+            {
+                gotoposition_btn.Enabled = true;
+                gotoposition_txtbx.Enabled = true;
+                Communicator.GetInstance().SetTrackeralgoOverride(true);
+                return;
+            }
+            gotoposition_btn.Enabled = false;
+            gotoposition_txtbx.Enabled = false;
+            Communicator.GetInstance().SetTrackeralgoOverride(false);
+        }
+
+        private void gotoposition_btn_Click(object sender, EventArgs e)
+        {
+            Communicator.GetInstance().SendActuatorPosition(Utils.AngleToActPos(double.Parse(gotoposition_txtbx.Text)));
+        }
+
+        private void quit_btn_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
     }
 }
