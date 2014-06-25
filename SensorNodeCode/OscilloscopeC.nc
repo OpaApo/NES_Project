@@ -1,18 +1,6 @@
 /*
- * Copyright (c) 2006 Intel Corporation
- * All rights reserved.
- *
- * This file is distributed under the terms in the attached INTEL-LICENSE     
- * file. If you do not find these files, copies can be found by writing to
- * Intel Research Berkeley, 2150 Shattuck Avenue, Suite 1300, Berkeley, CA, 
- * 94704.  Attention:  Intel License Inquiry.
- */
-
-/**
- * Oscilloscope demo application. See README.txt file in this directory.
- *
- * @author David Gay
- */
+*
+*/
 #include "Timer.h"
 #include "Oscilloscope.h"
 
@@ -33,17 +21,8 @@ implementation
   message_t sendBuf;
   bool sendBusy;
 
-  /* Current local state - interval, version and accumulated readings */
-  //oscilloscope_t local;
   uint16_t currentData = 0;
 
-  /* uint8_t reading; 0 to NREADINGS */
-
-  /* When we head an Oscilloscope message, we check it's sample count. If
-     it's ahead of ours, we "jump" forwards (set our count to the received
-     count). However, we must then suppress our next count increment. This
-     is a very simple form of "time" synchronization (for an abstract
-     notion of time). */
   bool suppressCountChange;
 
   // Use LEDs to report various status issues.
@@ -52,16 +31,12 @@ implementation
   void report_received() { call Leds.led2Toggle(); }
 
   event void Boot.booted() {
-    //local.interval = DEFAULT_INTERVAL;
-    //local.id = TOS_NODE_ID;
     if (call RadioControl.start() != SUCCESS)
       report_problem();
   }
 
   void startTimer() {
 		call Timer.startPeriodic(1000);    
-		//call Timer.startPeriodic(DEFAULT_INTERVAL);
-    //reading = 0;
   }
 
   event void RadioControl.startDone(error_t error) {
@@ -76,49 +51,20 @@ implementation
 
     report_received();
 
-    /* If we receive a newer version, update our interval. 
-       If we hear from a future count, jump ahead but suppress our own change
-    */
-    /*if (omsg->version > local.version)
-      {
-	local.version = omsg->version;
-	local.interval = omsg->interval;
-	startTimer();
-      }
-    if (omsg->count > local.count)
-      {
-	local.count = omsg->count;
-	suppressCountChange = TRUE;
-      }*/
-
     return msg;
   }
 
-  /* At each sample period:
-     - if local sample buffer is full, send accumulated samples
-     - read next sample
-  */
-  event void Timer.fired() {
-    //if (reading == NREADINGS)
-      //{
-	if (!sendBusy && sizeof currentData <= call AMSend.maxPayloadLength())
-	  {
-	    // Don't need to check for null because we've already checked length
-	    // above
-	    memcpy(call AMSend.getPayload(&sendBuf, sizeof(currentData)), &currentData, sizeof currentData);
-	    if (call AMSend.send(AM_BROADCAST_ADDR, &sendBuf, sizeof currentData) == SUCCESS)
-	      sendBusy = TRUE;
-	  }
-	if (!sendBusy)
-	  report_problem();
 
-	//reading = 0;
-	/* Part 2 of cheap "time sync": increment our count if we didn't
-	   jump ahead. */
-	/*if (!suppressCountChange)
-	  local.count++;
-	suppressCountChange = FALSE; */
-      //}
+  event void Timer.fired() {
+		if (!sendBusy && sizeof currentData <= call AMSend.maxPayloadLength())
+			{
+			  memcpy(call AMSend.getPayload(&sendBuf, sizeof(currentData)), &currentData, sizeof currentData);
+			  if (call AMSend.send(AM_BROADCAST_ADDR, &sendBuf, sizeof currentData) == SUCCESS)
+			    sendBusy = TRUE;
+			}
+		if (!sendBusy)
+			report_problem();
+
     if (call Read.read() != SUCCESS)
       report_problem();
   }
@@ -134,13 +80,10 @@ implementation
 
   event void Read.readDone(error_t result, uint16_t data) {
     if (result != SUCCESS)
-      {
-	data = 0xffff;
-	report_problem();
-      }
-    /*if (reading < NREADINGS) 
-      local.readings[reading++] = data;
-*/
-	currentData = data;
+    {
+			data = 0xffff;
+			report_problem();
+    }
+		currentData = data;
   }
 }
