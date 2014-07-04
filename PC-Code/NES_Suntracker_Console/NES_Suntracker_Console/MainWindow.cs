@@ -40,5 +40,20 @@ namespace NES_Suntracker_Console
         {
             Environment.Exit(0);
         }
+
+        private void manualActuator_chkbx_CheckedChanged(object sender, EventArgs e)
+        {
+            if(manualActuator_chkbx.Checked)
+            {
+                command_txtbx.Enabled = true;
+                sendCommand_btn.Enabled = true;
+            }
+            else
+            {
+                command_txtbx.Enabled = false;
+                sendCommand_btn.Enabled = false;
+            }
+        }
+
     }
 }

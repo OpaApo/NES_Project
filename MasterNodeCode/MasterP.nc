@@ -80,7 +80,7 @@ implementation
 				result = result + nodePayload[i];
 
 	    post uartSendTask();			//Send result to PC (Uart)
-			post radioSendTask();			//Send result to Servo node (ZigBee)
+			//post radioSendTask();			//Send result to Servo node (ZigBee)
 			call Leds.led0Toggle();		//Toggle red led
 		}
 	}
