@@ -28,21 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.temp_txtbx = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.pos_txtbx = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cwanglelimit_txtbx = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.voltage_txtbx = new System.Windows.Forms.TextBox();
             this.quit_btn = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBox14 = new System.Windows.Forms.TextBox();
@@ -66,190 +59,97 @@
             this.gotoposition_txtbx = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.sendCommand_btn = new System.Windows.Forms.Button();
-            this.label11 = new System.Windows.Forms.Label();
-            this.command_txtbx = new System.Windows.Forms.TextBox();
-            this.manualActuator_chkbx = new System.Windows.Forms.CheckBox();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.textBox15 = new System.Windows.Forms.TextBox();
+            this.poller = new System.Windows.Forms.Timer(this.components);
+            this.forceActuator_btn = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.textBox6);
-            this.groupBox1.Controls.Add(this.textBox4);
+            this.groupBox1.Controls.Add(this.forceActuator_btn);
+            this.groupBox1.Controls.Add(this.temp_txtbx);
             this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.textBox5);
-            this.groupBox1.Controls.Add(this.textBox3);
             this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.textBox2);
+            this.groupBox1.Controls.Add(this.pos_txtbx);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.textBox1);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.cwanglelimit_txtbx);
-            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.voltage_txtbx);
             this.groupBox1.Location = new System.Drawing.Point(18, 90);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox1.Size = new System.Drawing.Size(444, 395);
+            this.groupBox1.Size = new System.Drawing.Size(444, 255);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Actuator Status";
             // 
-            // textBox6
+            // temp_txtbx
             // 
-            this.textBox6.Enabled = false;
-            this.textBox6.Location = new System.Drawing.Point(240, 153);
-            this.textBox6.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.ReadOnly = true;
-            this.textBox6.Size = new System.Drawing.Size(148, 31);
-            this.textBox6.TabIndex = 13;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Enabled = false;
-            this.textBox4.Location = new System.Drawing.Point(240, 328);
-            this.textBox4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.ReadOnly = true;
-            this.textBox4.Size = new System.Drawing.Size(148, 31);
-            this.textBox4.TabIndex = 9;
+            this.temp_txtbx.Enabled = false;
+            this.temp_txtbx.Location = new System.Drawing.Point(247, 39);
+            this.temp_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.temp_txtbx.Name = "temp_txtbx";
+            this.temp_txtbx.ReadOnly = true;
+            this.temp_txtbx.Size = new System.Drawing.Size(148, 31);
+            this.temp_txtbx.TabIndex = 13;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(16, 158);
+            this.label7.Location = new System.Drawing.Point(23, 44);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(214, 25);
             this.label7.TabIndex = 12;
             this.label7.Text = "Present Temperature";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(18, 333);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(140, 25);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Present Load";
-            // 
-            // textBox5
-            // 
-            this.textBox5.Enabled = false;
-            this.textBox5.Location = new System.Drawing.Point(240, 109);
-            this.textBox5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(148, 31);
-            this.textBox5.TabIndex = 11;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Enabled = false;
-            this.textBox3.Location = new System.Drawing.Point(240, 284);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(148, 31);
-            this.textBox3.TabIndex = 7;
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(16, 205);
+            this.label6.Location = new System.Drawing.Point(23, 91);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(165, 25);
             this.label6.TabIndex = 10;
             this.label6.Text = "Present Voltage";
             // 
-            // label4
+            // pos_txtbx
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(18, 289);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(154, 25);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Present Speed";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(240, 241);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(148, 31);
-            this.textBox2.TabIndex = 5;
+            this.pos_txtbx.Enabled = false;
+            this.pos_txtbx.Location = new System.Drawing.Point(247, 127);
+            this.pos_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pos_txtbx.Name = "pos_txtbx";
+            this.pos_txtbx.ReadOnly = true;
+            this.pos_txtbx.Size = new System.Drawing.Size(148, 31);
+            this.pos_txtbx.TabIndex = 5;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(18, 248);
+            this.label3.Location = new System.Drawing.Point(25, 134);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(169, 25);
             this.label3.TabIndex = 4;
             this.label3.Text = "Present Position";
             // 
-            // textBox1
+            // voltage_txtbx
             // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(240, 197);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(148, 31);
-            this.textBox1.TabIndex = 3;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 114);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(174, 25);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "CCW Angle Limit";
-            // 
-            // cwanglelimit_txtbx
-            // 
-            this.cwanglelimit_txtbx.Enabled = false;
-            this.cwanglelimit_txtbx.Location = new System.Drawing.Point(240, 66);
-            this.cwanglelimit_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.cwanglelimit_txtbx.Name = "cwanglelimit_txtbx";
-            this.cwanglelimit_txtbx.ReadOnly = true;
-            this.cwanglelimit_txtbx.Size = new System.Drawing.Size(148, 31);
-            this.cwanglelimit_txtbx.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 70);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(159, 25);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "CW Angle Limit";
+            this.voltage_txtbx.Enabled = false;
+            this.voltage_txtbx.Location = new System.Drawing.Point(247, 83);
+            this.voltage_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.voltage_txtbx.Name = "voltage_txtbx";
+            this.voltage_txtbx.ReadOnly = true;
+            this.voltage_txtbx.Size = new System.Drawing.Size(148, 31);
+            this.voltage_txtbx.TabIndex = 3;
             // 
             // quit_btn
             // 
-            this.quit_btn.Location = new System.Drawing.Point(858, 817);
+            this.quit_btn.Location = new System.Drawing.Point(834, 759);
             this.quit_btn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.quit_btn.Name = "quit_btn";
             this.quit_btn.Size = new System.Drawing.Size(112, 44);
@@ -262,6 +162,7 @@
             // 
             this.groupBox2.Controls.Add(this.textBox14);
             this.groupBox2.Controls.Add(this.label16);
+            this.groupBox2.Controls.Add(this.button2);
             this.groupBox2.Controls.Add(this.textBox7);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.textBox9);
@@ -276,7 +177,7 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox2.Size = new System.Drawing.Size(444, 383);
+            this.groupBox2.Size = new System.Drawing.Size(444, 396);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tracker Status";
@@ -414,12 +315,12 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(549, 817);
+            this.button2.Location = new System.Drawing.Point(89, 342);
             this.button2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(268, 44);
             this.button2.TabIndex = 5;
-            this.button2.Text = "Force Tracker Update";
+            this.button2.Text = "Force Update";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // groupBox4
@@ -495,68 +396,14 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.groupBox5);
             this.groupBox3.Controls.Add(this.textBox8);
             this.groupBox3.Controls.Add(this.label9);
-            this.groupBox3.Location = new System.Drawing.Point(18, 517);
+            this.groupBox3.Location = new System.Drawing.Point(18, 400);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(444, 346);
+            this.groupBox3.Size = new System.Drawing.Size(444, 124);
             this.groupBox3.TabIndex = 7;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Solarpanel";
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.textBox15);
-            this.groupBox5.Controls.Add(this.label18);
-            this.groupBox5.Controls.Add(this.sendCommand_btn);
-            this.groupBox5.Controls.Add(this.label11);
-            this.groupBox5.Controls.Add(this.command_txtbx);
-            this.groupBox5.Controls.Add(this.manualActuator_chkbx);
-            this.groupBox5.Location = new System.Drawing.Point(21, 113);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(417, 227);
-            this.groupBox5.TabIndex = 15;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Manual actuator control";
-            // 
-            // sendCommand_btn
-            // 
-            this.sendCommand_btn.Enabled = false;
-            this.sendCommand_btn.Location = new System.Drawing.Point(253, 72);
-            this.sendCommand_btn.Name = "sendCommand_btn";
-            this.sendCommand_btn.Size = new System.Drawing.Size(91, 54);
-            this.sendCommand_btn.TabIndex = 3;
-            this.sendCommand_btn.Text = "Send";
-            this.sendCommand_btn.UseVisualStyleBackColor = true;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 88);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(109, 25);
-            this.label11.TabIndex = 2;
-            this.label11.Text = "Command";
-            // 
-            // command_txtbx
-            // 
-            this.command_txtbx.Enabled = false;
-            this.command_txtbx.Location = new System.Drawing.Point(137, 85);
-            this.command_txtbx.Name = "command_txtbx";
-            this.command_txtbx.Size = new System.Drawing.Size(100, 31);
-            this.command_txtbx.TabIndex = 1;
-            // 
-            // manualActuator_chkbx
-            // 
-            this.manualActuator_chkbx.AutoSize = true;
-            this.manualActuator_chkbx.Location = new System.Drawing.Point(7, 31);
-            this.manualActuator_chkbx.Name = "manualActuator_chkbx";
-            this.manualActuator_chkbx.Size = new System.Drawing.Size(133, 29);
-            this.manualActuator_chkbx.TabIndex = 0;
-            this.manualActuator_chkbx.Text = "Activated";
-            this.manualActuator_chkbx.UseVisualStyleBackColor = true;
-            this.manualActuator_chkbx.CheckedChanged += new System.EventHandler(this.manualActuator_chkbx_CheckedChanged);
             // 
             // textBox8
             // 
@@ -577,31 +424,30 @@
             this.label9.TabIndex = 0;
             this.label9.Text = "Measured intensity:";
             // 
-            // label18
+            // poller
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(6, 146);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(108, 25);
-            this.label18.TabIndex = 4;
-            this.label18.Text = "Received:";
+            this.poller.Enabled = true;
+            this.poller.Interval = 5000;
+            this.poller.Tick += new System.EventHandler(this.poller_Tick);
             // 
-            // textBox15
+            // forceActuator_btn
             // 
-            this.textBox15.Location = new System.Drawing.Point(137, 143);
-            this.textBox15.Name = "textBox15";
-            this.textBox15.ReadOnly = true;
-            this.textBox15.Size = new System.Drawing.Size(250, 31);
-            this.textBox15.TabIndex = 5;
+            this.forceActuator_btn.Location = new System.Drawing.Point(93, 195);
+            this.forceActuator_btn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.forceActuator_btn.Name = "forceActuator_btn";
+            this.forceActuator_btn.Size = new System.Drawing.Size(268, 44);
+            this.forceActuator_btn.TabIndex = 8;
+            this.forceActuator_btn.Text = "Force Update";
+            this.forceActuator_btn.UseVisualStyleBackColor = true;
+            this.forceActuator_btn.Click += new System.EventHandler(this.forceActuator_btn_Click);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1025, 894);
+            this.ClientSize = new System.Drawing.Size(985, 848);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.quit_btn);
@@ -617,8 +463,6 @@
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -627,20 +471,12 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox temp_txtbx;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox pos_txtbx;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox cwanglelimit_txtbx;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox voltage_txtbx;
         private System.Windows.Forms.Button quit_btn;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox textBox7;
@@ -664,15 +500,10 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Button sendCommand_btn;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox command_txtbx;
-        private System.Windows.Forms.CheckBox manualActuator_chkbx;
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox textBox15;
-        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Timer poller;
+        private System.Windows.Forms.Button forceActuator_btn;
     }
 }
 
