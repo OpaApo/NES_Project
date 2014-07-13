@@ -24,7 +24,6 @@ implementation
     SAMPLE_PERIOD = 1000,		//Timer period in ms
 		MASTER_ADDRESS = 1
   };
-  message_t sendBuf;	//Message frame
 
   uint16_t lastSensorData = 0;		//Last sensor value
 
@@ -33,16 +32,16 @@ implementation
   void report_timer_fired() { call Leds.led2Toggle(); }	//Blue LED
 
   event void Boot.booted() {
-		call RadioControl.start();	//start radio communication
+		call Timer.startPeriodic(SAMPLE_PERIOD);		//seccessfull -> start timer for data collection
   }
 
   event void RadioControl.startDone(error_t error) {		//ISR called after attempt to start radio communication
-    if (error != SUCCESS) {
-      report_problem();			
-			call RadioControl.start();			//not successfull -> try again
-		} else
-			call Timer.startPeriodic(SAMPLE_PERIOD);		//seccessfull -> start timer for data collection
-		
+		atomic {
+		  if (error != SUCCESS) {
+		    report_problem();			
+				call RadioControl.start();			//not successfull -> try again
+			} 
+		}
   }
 
   event void RadioControl.stopDone(error_t error) {}
@@ -52,6 +51,8 @@ implementation
 
   event void Timer.fired() {
 		report_timer_fired();		//toggle blue led (broken on most boards)
+
+		call RadioControl.start();	//start radio communication
 	  
     if (call Read.read() != SUCCESS)	
       report_problem();		//Error reading sensor data -> toggle red led
@@ -62,6 +63,7 @@ implementation
       report_sent();		//everything ok -> toggle gerren led
     else
       report_problem();	//error -> toggle red led
+		call RadioControl.stop();	//stop radio communication, save power
   }
 
   event void Read.readDone(error_t result, uint16_t data) {
