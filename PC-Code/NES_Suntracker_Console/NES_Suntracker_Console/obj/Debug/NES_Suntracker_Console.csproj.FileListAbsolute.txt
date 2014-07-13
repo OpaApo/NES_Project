@@ -1,9 +1,9 @@
 C:\Users\Nico\Documents\GitHub\NES_Project\PC-Code\NES_Suntracker_Console\NES_Suntracker_Console\bin\Debug\NES_Suntracker_Console.exe.config
 C:\Users\Nico\Documents\GitHub\NES_Project\PC-Code\NES_Suntracker_Console\NES_Suntracker_Console\bin\Debug\NES_Suntracker_Console.exe
 C:\Users\Nico\Documents\GitHub\NES_Project\PC-Code\NES_Suntracker_Console\NES_Suntracker_Console\bin\Debug\NES_Suntracker_Console.pdb
-C:\Users\Nico\Documents\GitHub\NES_Project\PC-Code\NES_Suntracker_Console\NES_Suntracker_Console\obj\Debug\NES_Suntracker_Console.csprojResolveAssemblyReference.cache
 C:\Users\Nico\Documents\GitHub\NES_Project\PC-Code\NES_Suntracker_Console\NES_Suntracker_Console\obj\Debug\NES_Suntracker_Console.MainWindow.resources
 C:\Users\Nico\Documents\GitHub\NES_Project\PC-Code\NES_Suntracker_Console\NES_Suntracker_Console\obj\Debug\NES_Suntracker_Console.Properties.Resources.resources
 C:\Users\Nico\Documents\GitHub\NES_Project\PC-Code\NES_Suntracker_Console\NES_Suntracker_Console\obj\Debug\NES_Suntracker_Console.csproj.GenerateResource.Cache
 C:\Users\Nico\Documents\GitHub\NES_Project\PC-Code\NES_Suntracker_Console\NES_Suntracker_Console\obj\Debug\NES_Suntracker_Console.exe
 C:\Users\Nico\Documents\GitHub\NES_Project\PC-Code\NES_Suntracker_Console\NES_Suntracker_Console\obj\Debug\NES_Suntracker_Console.pdb
+C:\Users\Nico\Documents\GitHub\NES_Project\PC-Code\NES_Suntracker_Console\NES_Suntracker_Console\obj\Debug\NES_Suntracker_Console.csprojResolveAssemblyReference.cache

@@ -15,6 +15,11 @@ namespace NES_Suntracker_Console
         public MainWindow()
         {
             InitializeComponent();
+            Communicator.GetInstance();
+            System.Threading.Thread.Sleep(300); // wait for init package to complete
+            temp_txtbx.Text = Communicator.GetInstance().getTemperture() + "°C";
+            voltage_txtbx.Text = Communicator.GetInstance().getVoltage() + "V";
+            pos_txtbx.Text = Communicator.GetInstance().getPosition().ToString() + "°";
         }
 
         private void trackeralgoOverride_chkbx_CheckedChanged(object sender, EventArgs e)
@@ -33,12 +38,35 @@ namespace NES_Suntracker_Console
 
         private void gotoposition_btn_Click(object sender, EventArgs e)
         {
-            Communicator.GetInstance().SendActuatorPosition(Utils.AngleToActPos(double.Parse(gotoposition_txtbx.Text)));
+            if(Int16.Parse(gotoposition_txtbx.Text) < 0 || Int16.Parse(gotoposition_txtbx.Text) >300)
+            {
+                MessageBox.Show("Valid: 0°<=angle<=300°", "Invalid angle", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            Communicator.GetInstance().SendActuatorPosition(Int16.Parse(gotoposition_txtbx.Text));
         }
 
         private void quit_btn_Click(object sender, EventArgs e)
         {
             Environment.Exit(0);
+        }
+
+
+        private void poller_Tick(object sender, EventArgs e)
+        {
+            temp_txtbx.Text = Communicator.GetInstance().getTemperture() + "°C";
+            voltage_txtbx.Text = Communicator.GetInstance().getVoltage() + "V";
+            pos_txtbx.Text = Communicator.GetInstance().getPosition().ToString() + "°";
+           
+        }
+
+        private void forceActuator_btn_Click(object sender, EventArgs e)
+        {
+            poller.Enabled = false;
+            temp_txtbx.Text = Communicator.GetInstance().getTemperture() + "°C";
+            voltage_txtbx.Text = Communicator.GetInstance().getVoltage() + "V";
+            pos_txtbx.Text = Communicator.GetInstance().getPosition().ToString() + "°";
+            poller.Enabled = true;
         }
     }
 }
