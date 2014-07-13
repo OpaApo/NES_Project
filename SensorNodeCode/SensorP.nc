@@ -1,16 +1,18 @@
 /*
-*
+*	Code for the sensor nodes (ZigBee adresses 2-5). 
+* Only purpose: Collect light sensor values and send them to the master node (ZigBee adresse 1). 
 */
+
 #include "Timer.h"
-#include "Oscilloscope.h"
 
 module SensorP @safe()
 {
   uses {
     interface Boot;
     interface SplitControl as RadioControl;
-    interface AMSend;
-    interface Receive;
+    interface AMSend as RadioSend[am_id_t id];
+    interface Packet as RadioPacket;
+    //interface Receive as RadioReceive[am_id_t id];
     interface Timer<TMilli>;
     interface Read<uint16_t>;
     interface Leds;
@@ -18,72 +20,63 @@ module SensorP @safe()
 }
 implementation
 {
-  message_t sendBuf;
-  bool sendBusy;
+	enum {
+    SAMPLE_PERIOD = 1000,		//Timer period in ms
+		MASTER_ADDRESS = 1
+  };
+  message_t sendBuf;	//Message frame
 
-  uint16_t currentData = 0;
+  uint16_t lastSensorData = 0;		//Last sensor value
 
-  bool suppressCountChange;
-
-  // Use LEDs to report various status issues.
-  void report_problem() { call Leds.led0Toggle(); }
-  void report_sent() { call Leds.led1Toggle(); }
-  void report_received() { call Leds.led2Toggle(); }
+  void report_problem() { call Leds.led0Toggle(); }		//Red LED
+  void report_sent() { call Leds.led1Toggle(); }			//Green LED
+  void report_timer_fired() { call Leds.led2Toggle(); }	//Blue LED
 
   event void Boot.booted() {
-    if (call RadioControl.start() != SUCCESS)
-      report_problem();
+		call RadioControl.start();	//start radio communication
   }
 
-  void startTimer() {
-		call Timer.startPeriodic(1000);    
+  event void RadioControl.startDone(error_t error) {		//ISR called after attempt to start radio communication
+    if (error != SUCCESS) {
+      report_problem();			
+			call RadioControl.start();			//not successfull -> try again
+		} else
+			call Timer.startPeriodic(SAMPLE_PERIOD);		//seccessfull -> start timer for data collection
+		
   }
 
-  event void RadioControl.startDone(error_t error) {
-    startTimer();
-  }
+  event void RadioControl.stopDone(error_t error) {}
 
-  event void RadioControl.stopDone(error_t error) {
-  }
-
-  event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len) {
-    oscilloscope_t *omsg = payload;
-
-    report_received();
-
-    return msg;
-  }
+//  event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len) {}
 
 
   event void Timer.fired() {
-		if (!sendBusy && sizeof currentData <= call AMSend.maxPayloadLength())
-			{
-			  memcpy(call AMSend.getPayload(&sendBuf, sizeof(currentData)), &currentData, sizeof currentData);
-			  if (call AMSend.send(AM_BROADCAST_ADDR, &sendBuf, sizeof currentData) == SUCCESS)
-			    sendBusy = TRUE;
-			}
-		if (!sendBusy)
-			report_problem();
-
-    if (call Read.read() != SUCCESS)
-      report_problem();
+		report_timer_fired();		//toggle blue led (broken on most boards)
+	  
+    if (call Read.read() != SUCCESS)	
+      report_problem();		//Error reading sensor data -> toggle red led
   }
 
-  event void AMSend.sendDone(message_t* msg, error_t error) {
+  event void RadioSend.sendDone[am_id_t id](message_t* msg, error_t error) {		//ISR called after a package is sent
     if (error == SUCCESS)
-      report_sent();
+      report_sent();		//everything ok -> toggle gerren led
     else
-      report_problem();
-
-    sendBusy = FALSE;
+      report_problem();	//error -> toggle red led
   }
 
   event void Read.readDone(error_t result, uint16_t data) {
-    if (result != SUCCESS)
+		uint16_t* pl;
+    message_t pkt;
+    if (result != SUCCESS)		//Set data invalid if a problem occured reading the sensor data
     {
 			data = 0xffff;
 			report_problem();
     }
-		currentData = data;
+		lastSensorData = data;		//Save sensor data, just to be sure :)
+		
+		pl = (uint16_t*)call RadioPacket.getPayload(&pkt, sizeof lastSensorData);	//Get pointer to payload of 2 byte for the message
+		*pl = lastSensorData;		//Write sensor data to payload
+			
+		call RadioSend.send[0](MASTER_ADDRESS, &pkt, sizeof lastSensorData);	//Send data to Master node (adress 1) via ZigBee
   }
 }

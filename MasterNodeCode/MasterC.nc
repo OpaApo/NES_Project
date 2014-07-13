@@ -17,7 +17,7 @@ implementation {
 	MasterP.SerialControl -> SerialCom;
   
   
-  MasterP.RadioSend -> Radio;
+  //MasterP.RadioSend -> Radio;
   MasterP.RadioReceive -> Radio.Receive;
   MasterP.RadioSnoop -> Radio.Snoop;
   MasterP.RadioPacket -> Radio;
