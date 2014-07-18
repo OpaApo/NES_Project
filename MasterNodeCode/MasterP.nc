@@ -14,6 +14,7 @@
 #include "AM.h"
 #include "Serial.h"
 #include "Timer.h"
+#include "Msp430Adc12.h"
 
 module MasterP @safe() {
   provides {
@@ -48,7 +49,7 @@ implementation
   };
 
 	const msp430adc12_channel_config_t configVal = {
-      inch: SUPPLY_VOLTAGE_HALF_CHANNEL,
+      inch: 0,
       sref: REFERENCE_VREFplus_AVss,
       ref2_5v: REFVOLT_LEVEL_1_5,
       adc12ssel: SHT_SOURCE_ACLK,
@@ -91,7 +92,7 @@ implementation
 		data4 = nodePayload[2];
 		data5 = nodePayload[3];
 
-		report_timer_fired();
+		
 		
 		atomic {
 			if (data2 != 0 && data3 != 0 && data4 != 0 && data5 != 0 )
@@ -121,12 +122,13 @@ implementation
 						result = 210;
 					}
 			    	else{
-					report_problem();
+					report_timer_fired();
 		      		}
   			}
 		}
 		post uartSendTask();			//Send result to PC (Uart)
 		//post radioSendTask();	
+		call ADCRead.read();
 	}
 
 
@@ -191,7 +193,7 @@ implementation
 */
   
   task void uartSendTask() {
-		uint8_t buf[12];		
+		uint8_t buf[15];		
 		atomic {
 			//Send calculated angle to PC
 			buf[0] = 0xee;
@@ -208,8 +210,11 @@ implementation
 			buf[9] = (uint8_t)(nodePayload[2] >> 8);
 			buf[10] = (uint8_t)nodePayload[3];
 			buf[11] = (uint8_t)(nodePayload[3] >> 8);
+			buf[12] = 0xcc;
+			buf[13] = (uint8_t)solar;
+			buf[14] = (uint8_t)(solar >> 8);
 		} 
-		call Serial.send(buf, 12);	//Send the 8 byte via uart to PC
+		call Serial.send(buf, 15);	//Send the 8 byte via uart to PC
   }
 
 /*
