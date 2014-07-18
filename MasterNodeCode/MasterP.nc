@@ -65,17 +65,48 @@ implementation
 		call Timer0.startPeriodic(CALCULATION_PERIOD);		//start the timer
 	}
 
-	event void Timer0.fired() {		//Timer interrupt
-		report_timer_fired();
-		atomic {
-			uint8_t i;
-			//TODO: Calculation here!
-			//result = ...
+	
 
-			//TODO: Temporary:
-			result = 0;
-			for (i = 0; i < SENSOR_NODE_COUNT; i++)
-				result = result + nodePayload[i];
+	event void Timer0.fired() {		//Timer interrupt
+		uint16_t data2, data3, data4, data5;
+		data2 = nodePayload[0];
+	  	data3 = nodePayload[1];
+		data4 = nodePayload[2];
+		data5 = nodePayload[3];
+
+		report_timer_fired();
+		
+		atomic {
+			if (data2 != 0 && data3 != 0 && data4 != 0 && data5 != 0 )
+			{
+				if (data5 > data2 && data2 > data4 && data4 > data3){
+					result = 270;
+				}
+				else if (data2 > data5 && data5 > data3 && data3 > data4){
+						result = 295;
+					}
+				else if (data2 > data3 && data3 > data5 && data5 > data4){
+						result = 0;
+					}
+				else if (data3 > data2 && data2 > data4 && data4 > data5){
+						result = 30;
+					}
+				else if (data3 > data4 && data4 > data2 && data2 > data5){
+						result = 90;
+					}
+				else if (data4 > data3 && data3 > data5 && data5 > data2){
+						result = 120;
+					}
+				else if (data4 > data5 && data5 > data3 && data3 > data2){
+						result = 180;
+					}
+				else if (data5 > data4 && data4 > data2 && data2 > data3){
+						result = 210;
+					}
+			    	else{
+					report_problem();
+		      		}
+  			}
 		}
 		post uartSendTask();			//Send result to PC (Uart)
 		//post radioSendTask();	
