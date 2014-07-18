@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.forceActuator_btn = new System.Windows.Forms.Button();
             this.temp_txtbx = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -38,20 +39,17 @@
             this.voltage_txtbx = new System.Windows.Forms.TextBox();
             this.quit_btn = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.textBox14 = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.intens3_txtbx = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.intens2_txtbx = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.textBox11 = new System.Windows.Forms.TextBox();
+            this.sunangle_txtbx = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.textBox12 = new System.Windows.Forms.TextBox();
+            this.intens4_txtbx = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.textBox13 = new System.Windows.Forms.TextBox();
+            this.intens1_txtbx = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label20 = new System.Windows.Forms.Label();
             this.trackeralgoOverride_chkbx = new System.Windows.Forms.CheckBox();
@@ -59,10 +57,10 @@
             this.gotoposition_txtbx = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.solarvoltage_txtbx = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.poller = new System.Windows.Forms.Timer(this.components);
-            this.forceActuator_btn = new System.Windows.Forms.Button();
+            this.lastUpdateTimer = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -86,6 +84,17 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Actuator Status";
+            // 
+            // forceActuator_btn
+            // 
+            this.forceActuator_btn.Location = new System.Drawing.Point(93, 195);
+            this.forceActuator_btn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.forceActuator_btn.Name = "forceActuator_btn";
+            this.forceActuator_btn.Size = new System.Drawing.Size(268, 44);
+            this.forceActuator_btn.TabIndex = 8;
+            this.forceActuator_btn.Text = "Force Update";
+            this.forceActuator_btn.UseVisualStyleBackColor = true;
+            this.forceActuator_btn.Click += new System.EventHandler(this.forceActuator_btn_Click);
             // 
             // temp_txtbx
             // 
@@ -160,57 +169,34 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.textBox14);
-            this.groupBox2.Controls.Add(this.label16);
-            this.groupBox2.Controls.Add(this.button2);
-            this.groupBox2.Controls.Add(this.textBox7);
+            this.groupBox2.Controls.Add(this.intens3_txtbx);
             this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Controls.Add(this.textBox9);
+            this.groupBox2.Controls.Add(this.intens2_txtbx);
             this.groupBox2.Controls.Add(this.label10);
-            this.groupBox2.Controls.Add(this.textBox11);
+            this.groupBox2.Controls.Add(this.sunangle_txtbx);
             this.groupBox2.Controls.Add(this.label12);
-            this.groupBox2.Controls.Add(this.textBox12);
+            this.groupBox2.Controls.Add(this.intens4_txtbx);
             this.groupBox2.Controls.Add(this.label13);
-            this.groupBox2.Controls.Add(this.textBox13);
+            this.groupBox2.Controls.Add(this.intens1_txtbx);
             this.groupBox2.Controls.Add(this.label14);
             this.groupBox2.Location = new System.Drawing.Point(502, 90);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox2.Size = new System.Drawing.Size(444, 396);
+            this.groupBox2.Size = new System.Drawing.Size(444, 353);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tracker Status";
             // 
-            // textBox14
+            // intens3_txtbx
             // 
-            this.textBox14.Enabled = false;
-            this.textBox14.Location = new System.Drawing.Point(249, 288);
-            this.textBox14.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox14.Name = "textBox14";
-            this.textBox14.ReadOnly = true;
-            this.textBox14.Size = new System.Drawing.Size(148, 31);
-            this.textBox14.TabIndex = 15;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(18, 295);
-            this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(137, 25);
-            this.label16.TabIndex = 14;
-            this.label16.Text = "Last updated";
-            // 
-            // textBox7
-            // 
-            this.textBox7.Enabled = false;
-            this.textBox7.Location = new System.Drawing.Point(249, 153);
-            this.textBox7.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.ReadOnly = true;
-            this.textBox7.Size = new System.Drawing.Size(148, 31);
-            this.textBox7.TabIndex = 13;
+            this.intens3_txtbx.Enabled = false;
+            this.intens3_txtbx.Location = new System.Drawing.Point(249, 153);
+            this.intens3_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.intens3_txtbx.Name = "intens3_txtbx";
+            this.intens3_txtbx.ReadOnly = true;
+            this.intens3_txtbx.Size = new System.Drawing.Size(148, 31);
+            this.intens3_txtbx.TabIndex = 13;
             // 
             // label8
             // 
@@ -222,15 +208,15 @@
             this.label8.TabIndex = 12;
             this.label8.Text = "Intentity Node 3";
             // 
-            // textBox9
+            // intens2_txtbx
             // 
-            this.textBox9.Enabled = false;
-            this.textBox9.Location = new System.Drawing.Point(249, 109);
-            this.textBox9.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.ReadOnly = true;
-            this.textBox9.Size = new System.Drawing.Size(148, 31);
-            this.textBox9.TabIndex = 11;
+            this.intens2_txtbx.Enabled = false;
+            this.intens2_txtbx.Location = new System.Drawing.Point(249, 109);
+            this.intens2_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.intens2_txtbx.Name = "intens2_txtbx";
+            this.intens2_txtbx.ReadOnly = true;
+            this.intens2_txtbx.Size = new System.Drawing.Size(148, 31);
+            this.intens2_txtbx.TabIndex = 11;
             // 
             // label10
             // 
@@ -242,15 +228,15 @@
             this.label10.TabIndex = 10;
             this.label10.Text = "Intentity Node 4";
             // 
-            // textBox11
+            // sunangle_txtbx
             // 
-            this.textBox11.Enabled = false;
-            this.textBox11.Location = new System.Drawing.Point(249, 241);
-            this.textBox11.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox11.Name = "textBox11";
-            this.textBox11.ReadOnly = true;
-            this.textBox11.Size = new System.Drawing.Size(148, 31);
-            this.textBox11.TabIndex = 5;
+            this.sunangle_txtbx.Enabled = false;
+            this.sunangle_txtbx.Location = new System.Drawing.Point(249, 241);
+            this.sunangle_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.sunangle_txtbx.Name = "sunangle_txtbx";
+            this.sunangle_txtbx.ReadOnly = true;
+            this.sunangle_txtbx.Size = new System.Drawing.Size(148, 31);
+            this.sunangle_txtbx.TabIndex = 5;
             // 
             // label12
             // 
@@ -262,15 +248,15 @@
             this.label12.TabIndex = 4;
             this.label12.Text = "Estimated Sunposition";
             // 
-            // textBox12
+            // intens4_txtbx
             // 
-            this.textBox12.Enabled = false;
-            this.textBox12.Location = new System.Drawing.Point(249, 197);
-            this.textBox12.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox12.Name = "textBox12";
-            this.textBox12.ReadOnly = true;
-            this.textBox12.Size = new System.Drawing.Size(148, 31);
-            this.textBox12.TabIndex = 3;
+            this.intens4_txtbx.Enabled = false;
+            this.intens4_txtbx.Location = new System.Drawing.Point(249, 197);
+            this.intens4_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.intens4_txtbx.Name = "intens4_txtbx";
+            this.intens4_txtbx.ReadOnly = true;
+            this.intens4_txtbx.Size = new System.Drawing.Size(148, 31);
+            this.intens4_txtbx.TabIndex = 3;
             // 
             // label13
             // 
@@ -282,15 +268,15 @@
             this.label13.TabIndex = 2;
             this.label13.Text = "Intentity Node 2";
             // 
-            // textBox13
+            // intens1_txtbx
             // 
-            this.textBox13.Enabled = false;
-            this.textBox13.Location = new System.Drawing.Point(249, 66);
-            this.textBox13.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox13.Name = "textBox13";
-            this.textBox13.ReadOnly = true;
-            this.textBox13.Size = new System.Drawing.Size(148, 31);
-            this.textBox13.TabIndex = 1;
+            this.intens1_txtbx.Enabled = false;
+            this.intens1_txtbx.Location = new System.Drawing.Point(249, 66);
+            this.intens1_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.intens1_txtbx.Name = "intens1_txtbx";
+            this.intens1_txtbx.ReadOnly = true;
+            this.intens1_txtbx.Size = new System.Drawing.Size(148, 31);
+            this.intens1_txtbx.TabIndex = 1;
             // 
             // label14
             // 
@@ -312,16 +298,6 @@
             this.label15.Size = new System.Drawing.Size(353, 44);
             this.label15.TabIndex = 4;
             this.label15.Text = "Suntracker Console";
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(89, 342);
-            this.button2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(268, 44);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Force Update";
-            this.button2.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
@@ -396,7 +372,7 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.textBox8);
+            this.groupBox3.Controls.Add(this.solarvoltage_txtbx);
             this.groupBox3.Controls.Add(this.label9);
             this.groupBox3.Location = new System.Drawing.Point(18, 400);
             this.groupBox3.Name = "groupBox3";
@@ -405,15 +381,15 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Solarpanel";
             // 
-            // textBox8
+            // solarvoltage_txtbx
             // 
-            this.textBox8.Enabled = false;
-            this.textBox8.Location = new System.Drawing.Point(240, 51);
-            this.textBox8.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.ReadOnly = true;
-            this.textBox8.Size = new System.Drawing.Size(148, 31);
-            this.textBox8.TabIndex = 14;
+            this.solarvoltage_txtbx.Enabled = false;
+            this.solarvoltage_txtbx.Location = new System.Drawing.Point(240, 51);
+            this.solarvoltage_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.solarvoltage_txtbx.Name = "solarvoltage_txtbx";
+            this.solarvoltage_txtbx.ReadOnly = true;
+            this.solarvoltage_txtbx.Size = new System.Drawing.Size(148, 31);
+            this.solarvoltage_txtbx.TabIndex = 14;
             // 
             // label9
             // 
@@ -430,16 +406,11 @@
             this.poller.Interval = 5000;
             this.poller.Tick += new System.EventHandler(this.poller_Tick);
             // 
-            // forceActuator_btn
+            // lastUpdateTimer
             // 
-            this.forceActuator_btn.Location = new System.Drawing.Point(93, 195);
-            this.forceActuator_btn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.forceActuator_btn.Name = "forceActuator_btn";
-            this.forceActuator_btn.Size = new System.Drawing.Size(268, 44);
-            this.forceActuator_btn.TabIndex = 8;
-            this.forceActuator_btn.Text = "Force Update";
-            this.forceActuator_btn.UseVisualStyleBackColor = true;
-            this.forceActuator_btn.Click += new System.EventHandler(this.forceActuator_btn_Click);
+            this.lastUpdateTimer.Enabled = true;
+            this.lastUpdateTimer.Interval = 500;
+            this.lastUpdateTimer.Tick += new System.EventHandler(this.lastUpdateTimer_Tick);
             // 
             // MainWindow
             // 
@@ -479,20 +450,17 @@
         private System.Windows.Forms.TextBox voltage_txtbx;
         private System.Windows.Forms.Button quit_btn;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox intens3_txtbx;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.TextBox intens2_txtbx;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox textBox11;
+        private System.Windows.Forms.TextBox sunangle_txtbx;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox textBox12;
+        private System.Windows.Forms.TextBox intens4_txtbx;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox textBox13;
+        private System.Windows.Forms.TextBox intens1_txtbx;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.TextBox textBox14;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox trackeralgoOverride_chkbx;
         private System.Windows.Forms.Button gotoposition_btn;
@@ -500,10 +468,11 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.TextBox textBox8;
+        private System.Windows.Forms.TextBox solarvoltage_txtbx;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Timer poller;
         private System.Windows.Forms.Button forceActuator_btn;
+        private System.Windows.Forms.Timer lastUpdateTimer;
     }
 }
 
