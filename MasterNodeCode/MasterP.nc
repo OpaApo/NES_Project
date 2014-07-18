@@ -143,12 +143,21 @@ implementation
 */
   
   task void uartSendTask() {
-		uint8_t buf[2];		
+		uint8_t buf[8];		
 		atomic {
+			//Send calculated angle to PC
+			buf[0] = 0xee;
 			buf[1] = (uint8_t)result;		//Decompose 16bit result into two seperatee byte, MSB first
-			buf[0] = (uint8_t)(result >> 8);
+			buf[2] = (uint8_t)(result >> 8);
+
+			//Send solar intensities to PC
+			buf[3] = 0xdd;
+			buf[4] = nodePayload[0];
+			buf[5] = nodePayload[1];
+			buf[6] = nodePayload[2];
+			buf[7] = nodePayload[3];
 		} 
-		call Serial.send(buf, 2);	//Send the two byte via uart to PC
+		call Serial.send(buf, 8);	//Send the 8 byte via uart to PC
   }
 
 
