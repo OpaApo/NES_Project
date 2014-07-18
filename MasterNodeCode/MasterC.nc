@@ -9,6 +9,7 @@ implementation {
   components ActiveMessageC as Radio;
   components new TimerMilliC() as Timer0;
 	components PlatformSerialC as SerialCom;
+	components new AdcReadClientC() as ADC;
 
   MainC.Boot <- MasterP;
 
@@ -16,6 +17,8 @@ implementation {
 	MasterP.Serial -> SerialCom;
 	MasterP.SerialControl -> SerialCom;
   
+	MasterP.ADCRead -> ADC;
+  ADC.AdcConfigure -> MasterP.config;
   
   //MasterP.RadioSend -> Radio;
   MasterP.RadioReceive -> Radio.Receive;

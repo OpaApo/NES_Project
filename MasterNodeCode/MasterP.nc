@@ -16,6 +16,9 @@
 #include "Timer.h"
 
 module MasterP @safe() {
+  provides {
+    interface AdcConfigure<const msp430adc12_channel_config_t*> as config;
+  }
   uses {
     interface Boot;
     interface SplitControl as RadioControl;
@@ -29,7 +32,9 @@ module MasterP @safe() {
     interface Packet as RadioPacket;
     interface AMPacket as RadioAMPacket;
 
-	interface Timer<TMilli> as Timer0;
+		interface Read<uint16_t> as ADCRead;
+
+		interface Timer<TMilli> as Timer0;
 
     interface Leds;
   }
@@ -42,8 +47,20 @@ implementation
 		CALCULATION_PERIOD = 1000,			//Timer period for calculation / UART to Servo
   };
 
+	const msp430adc12_channel_config_t configVal = {
+      inch: SUPPLY_VOLTAGE_HALF_CHANNEL,
+      sref: REFERENCE_VREFplus_AVss,
+      ref2_5v: REFVOLT_LEVEL_1_5,
+      adc12ssel: SHT_SOURCE_ACLK,
+      adc12div: SHT_CLOCK_DIV_1,
+      sht: SAMPLE_HOLD_4_CYCLES,
+      sampcon_ssel: SAMPCON_SOURCE_SMCLK,
+      sampcon_id: SAMPCON_CLOCK_DIV_1
+  };
+
 	uint16_t nodePayload[SENSOR_NODE_COUNT];	//Payload of last package from nodes with address 2 TO SENSOR_NODE_COUNT+2
   uint16_t result = 0;
+	uint16_t solar = 0;
 
   void report_problem() { call Leds.led0Toggle(); }		//Red
   void report_received() { call Leds.led1Toggle(); }			//Green
@@ -195,6 +212,22 @@ implementation
 		call Serial.send(buf, 12);	//Send the 8 byte via uart to PC
   }
 
+/*
+*	ADC to read voltage from solar panel
+*
+*/
+
+  event void ADCRead.readDone( error_t result, uint16_t val )
+  {
+    if (result == SUCCESS){
+			solar = val;
+    }
+  }
+
+  async command const msp430adc12_channel_config_t* config.getConfiguration()
+  {
+    return &configVal; // must not be changed
+  }
 
 /*
 *
