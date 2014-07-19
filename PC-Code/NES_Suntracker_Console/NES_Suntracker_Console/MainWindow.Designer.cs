@@ -39,6 +39,11 @@
             this.voltage_txtbx = new System.Windows.Forms.TextBox();
             this.quit_btn = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lastUpdate4_txtbx = new System.Windows.Forms.TextBox();
+            this.lastUpdate3_txtbx = new System.Windows.Forms.TextBox();
+            this.lastUpdate2_txtbx = new System.Windows.Forms.TextBox();
+            this.lastUpdate1_txtbx = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.intens3_txtbx = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.intens2_txtbx = new System.Windows.Forms.TextBox();
@@ -158,7 +163,7 @@
             // 
             // quit_btn
             // 
-            this.quit_btn.Location = new System.Drawing.Point(834, 759);
+            this.quit_btn.Location = new System.Drawing.Point(981, 747);
             this.quit_btn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.quit_btn.Name = "quit_btn";
             this.quit_btn.Size = new System.Drawing.Size(112, 44);
@@ -169,6 +174,11 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.lastUpdate4_txtbx);
+            this.groupBox2.Controls.Add(this.lastUpdate3_txtbx);
+            this.groupBox2.Controls.Add(this.lastUpdate2_txtbx);
+            this.groupBox2.Controls.Add(this.lastUpdate1_txtbx);
+            this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.intens3_txtbx);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.intens2_txtbx);
@@ -183,15 +193,64 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox2.Size = new System.Drawing.Size(444, 353);
+            this.groupBox2.Size = new System.Drawing.Size(591, 353);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tracker Status";
             // 
+            // lastUpdate4_txtbx
+            // 
+            this.lastUpdate4_txtbx.Enabled = false;
+            this.lastUpdate4_txtbx.Location = new System.Drawing.Point(438, 230);
+            this.lastUpdate4_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.lastUpdate4_txtbx.Name = "lastUpdate4_txtbx";
+            this.lastUpdate4_txtbx.ReadOnly = true;
+            this.lastUpdate4_txtbx.Size = new System.Drawing.Size(72, 31);
+            this.lastUpdate4_txtbx.TabIndex = 18;
+            // 
+            // lastUpdate3_txtbx
+            // 
+            this.lastUpdate3_txtbx.Enabled = false;
+            this.lastUpdate3_txtbx.Location = new System.Drawing.Point(438, 186);
+            this.lastUpdate3_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.lastUpdate3_txtbx.Name = "lastUpdate3_txtbx";
+            this.lastUpdate3_txtbx.ReadOnly = true;
+            this.lastUpdate3_txtbx.Size = new System.Drawing.Size(72, 31);
+            this.lastUpdate3_txtbx.TabIndex = 17;
+            // 
+            // lastUpdate2_txtbx
+            // 
+            this.lastUpdate2_txtbx.Enabled = false;
+            this.lastUpdate2_txtbx.Location = new System.Drawing.Point(438, 142);
+            this.lastUpdate2_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.lastUpdate2_txtbx.Name = "lastUpdate2_txtbx";
+            this.lastUpdate2_txtbx.ReadOnly = true;
+            this.lastUpdate2_txtbx.Size = new System.Drawing.Size(72, 31);
+            this.lastUpdate2_txtbx.TabIndex = 16;
+            // 
+            // lastUpdate1_txtbx
+            // 
+            this.lastUpdate1_txtbx.Enabled = false;
+            this.lastUpdate1_txtbx.Location = new System.Drawing.Point(438, 97);
+            this.lastUpdate1_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.lastUpdate1_txtbx.Name = "lastUpdate1_txtbx";
+            this.lastUpdate1_txtbx.ReadOnly = true;
+            this.lastUpdate1_txtbx.Size = new System.Drawing.Size(72, 31);
+            this.lastUpdate1_txtbx.TabIndex = 15;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(408, 55);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(137, 25);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Last updated";
+            // 
             // intens3_txtbx
             // 
             this.intens3_txtbx.Enabled = false;
-            this.intens3_txtbx.Location = new System.Drawing.Point(249, 153);
+            this.intens3_txtbx.Location = new System.Drawing.Point(246, 184);
             this.intens3_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.intens3_txtbx.Name = "intens3_txtbx";
             this.intens3_txtbx.ReadOnly = true;
@@ -201,7 +260,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(16, 158);
+            this.label8.Location = new System.Drawing.Point(13, 189);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(162, 25);
@@ -211,7 +270,7 @@
             // intens2_txtbx
             // 
             this.intens2_txtbx.Enabled = false;
-            this.intens2_txtbx.Location = new System.Drawing.Point(249, 109);
+            this.intens2_txtbx.Location = new System.Drawing.Point(246, 140);
             this.intens2_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.intens2_txtbx.Name = "intens2_txtbx";
             this.intens2_txtbx.ReadOnly = true;
@@ -221,7 +280,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(16, 205);
+            this.label10.Location = new System.Drawing.Point(13, 236);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(162, 25);
@@ -231,7 +290,7 @@
             // sunangle_txtbx
             // 
             this.sunangle_txtbx.Enabled = false;
-            this.sunangle_txtbx.Location = new System.Drawing.Point(249, 241);
+            this.sunangle_txtbx.Location = new System.Drawing.Point(246, 272);
             this.sunangle_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.sunangle_txtbx.Name = "sunangle_txtbx";
             this.sunangle_txtbx.ReadOnly = true;
@@ -241,7 +300,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(18, 248);
+            this.label12.Location = new System.Drawing.Point(15, 279);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(226, 25);
@@ -251,7 +310,7 @@
             // intens4_txtbx
             // 
             this.intens4_txtbx.Enabled = false;
-            this.intens4_txtbx.Location = new System.Drawing.Point(249, 197);
+            this.intens4_txtbx.Location = new System.Drawing.Point(246, 228);
             this.intens4_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.intens4_txtbx.Name = "intens4_txtbx";
             this.intens4_txtbx.ReadOnly = true;
@@ -261,7 +320,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(16, 114);
+            this.label13.Location = new System.Drawing.Point(13, 145);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(162, 25);
@@ -271,7 +330,7 @@
             // intens1_txtbx
             // 
             this.intens1_txtbx.Enabled = false;
-            this.intens1_txtbx.Location = new System.Drawing.Point(249, 66);
+            this.intens1_txtbx.Location = new System.Drawing.Point(246, 97);
             this.intens1_txtbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.intens1_txtbx.Name = "intens1_txtbx";
             this.intens1_txtbx.ReadOnly = true;
@@ -281,7 +340,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(16, 70);
+            this.label14.Location = new System.Drawing.Point(13, 101);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(162, 25);
@@ -306,7 +365,7 @@
             this.groupBox4.Controls.Add(this.gotoposition_btn);
             this.groupBox4.Controls.Add(this.gotoposition_txtbx);
             this.groupBox4.Controls.Add(this.label17);
-            this.groupBox4.Location = new System.Drawing.Point(502, 517);
+            this.groupBox4.Location = new System.Drawing.Point(18, 556);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -416,7 +475,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(985, 848);
+            this.ClientSize = new System.Drawing.Size(1150, 818);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.label15);
@@ -473,6 +532,11 @@
         private System.Windows.Forms.Timer poller;
         private System.Windows.Forms.Button forceActuator_btn;
         private System.Windows.Forms.Timer lastUpdateTimer;
+        private System.Windows.Forms.TextBox lastUpdate4_txtbx;
+        private System.Windows.Forms.TextBox lastUpdate3_txtbx;
+        private System.Windows.Forms.TextBox lastUpdate2_txtbx;
+        private System.Windows.Forms.TextBox lastUpdate1_txtbx;
+        private System.Windows.Forms.Label label1;
     }
 }
 
