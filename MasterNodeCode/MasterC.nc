@@ -10,6 +10,7 @@ implementation {
   components new TimerMilliC() as Timer0;
 	components PlatformSerialC as SerialCom;
 	components new AdcReadClientC() as ADC;
+	components new AMReceiverC(AM_SENSORVALUE);
 
   MainC.Boot <- MasterP;
 
@@ -19,12 +20,8 @@ implementation {
   
 	MasterP.ADCRead -> ADC;
   ADC.AdcConfigure -> MasterP.config;
-  
-  //MasterP.RadioSend -> Radio;
-  MasterP.RadioReceive -> Radio.Receive;
-  MasterP.RadioSnoop -> Radio.Snoop;
-  MasterP.RadioPacket -> Radio;
-  MasterP.RadioAMPacket -> Radio;
+
+  MasterP.RadioReceive -> AMReceiverC;
 
   MasterP.Timer0 -> Timer0;
   

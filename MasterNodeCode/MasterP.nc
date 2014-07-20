@@ -1,4 +1,8 @@
 /*
+*	Master node: Receives light intensity values from every sensor node. 
+* Calculates sun position from sensor values and sends them via UART 
+* to the PC.
+*
 *	Node Adresses:
 * Addr. 1: Master Node
 * Addr. 2: Sensor Node 1
@@ -7,7 +11,6 @@
 *				.
 *				.
 * Addr. SENSOR_NODE_COUNT+1: Sensor Node SENSOR_NODE_COUNT
-* Addr. SENSOR_NODE_COUNT+2: Servo Node
 *
 */
 
@@ -15,6 +18,7 @@
 #include "Serial.h"
 #include "Timer.h"
 #include "Msp430Adc12.h"
+#include "SensorValue.h"
 
 module MasterP @safe() {
   provides {
@@ -27,11 +31,7 @@ module MasterP @safe() {
 		interface StdControl as SerialControl;		//Uart Byte-Stream Controller, HIL
 		interface UartStream as Serial;						//Uart Byte-Stream, HIL
     
-    //interface AMSend as RadioSend[am_id_t id];
-    interface Receive as RadioReceive[am_id_t id];
-    interface Receive as RadioSnoop[am_id_t id];
-    interface Packet as RadioPacket;
-    interface AMPacket as RadioAMPacket;
+    interface Receive as RadioReceive;
 
 		interface Read<uint16_t> as ADCRead;
 
@@ -48,7 +48,7 @@ implementation
 		CALCULATION_PERIOD = 1000,			//Timer period for calculation / UART to Servo
   };
 
-	const msp430adc12_channel_config_t configVal = {
+	const msp430adc12_channel_config_t configVal = {		//Configuration for ADC (Solar panel)
       inch: 0,
       sref: REFERENCE_VREFplus_AVss,
       ref2_5v: REFVOLT_LEVEL_1_5,
@@ -60,15 +60,14 @@ implementation
   };
 
 	uint16_t nodePayload[SENSOR_NODE_COUNT];	//Payload of last package from nodes with address 2 TO SENSOR_NODE_COUNT+2
-  uint16_t result = 0;
-	uint16_t solar = 0;
+  uint16_t calc_result = 0;		//Result of sun pos. calculation
+	uint16_t solar = 0;		//Read ADC value form solar panel
 
   void report_problem() { call Leds.led0Toggle(); }		//Red
   void report_received() { call Leds.led1Toggle(); }			//Green
   void report_timer_fired() { call Leds.led2Toggle(); }	//Blue
 
   task void uartSendTask();
-  //task void radioSendTask();
 
 	event void Boot.booted() {
 		uint8_t i; 
@@ -83,67 +82,67 @@ implementation
 		call Timer0.startPeriodic(CALCULATION_PERIOD);		//start the timer
 	}
 
-	
-
 	event void Timer0.fired() {		//Timer interrupt
 		uint16_t data2, data3, data4, data5;
 		data2 = nodePayload[0];
-	  	data3 = nodePayload[1];
+	  data3 = nodePayload[1];
 		data4 = nodePayload[2];
 		data5 = nodePayload[3];
 
-		
-		
-		atomic {
-			if (data2 != 0 && data3 != 0 && data4 != 0 && data5 != 0 )
-			{
-				if (data5 > data2 && data2 > data4 && data4 > data3){
-					result = 270;
+		//Algorithm to calculate sun position from sensor values
+
+		if (data2 != 0 && data3 != 0 && data4 != 0 && data5 != 0 )
+		{
+			if (data5 > data2 && data2 > data4 && data4 > data3){
+				calc_result = 270;
+			}
+			else if (data2 > data5 && data5 > data3 && data3 > data4){
+					calc_result = 295;
 				}
-				else if (data2 > data5 && data5 > data3 && data3 > data4){
-						result = 295;
-					}
-				else if (data2 > data3 && data3 > data5 && data5 > data4){
-						result = 0;
-					}
-				else if (data3 > data2 && data2 > data4 && data4 > data5){
-						result = 30;
-					}
-				else if (data3 > data4 && data4 > data2 && data2 > data5){
-						result = 90;
-					}
-				else if (data4 > data3 && data3 > data5 && data5 > data2){
-						result = 120;
-					}
-				else if (data4 > data5 && data5 > data3 && data3 > data2){
-						result = 180;
-					}
-				else if (data5 > data4 && data4 > data2 && data2 > data3){
-						result = 210;
-					}
-			    	else{
-					report_timer_fired();
-		      		}
-  			}
-		}
-		post uartSendTask();			//Send result to PC (Uart)
+			else if (data2 > data3 && data3 > data5 && data5 > data4){
+					calc_result = 0;
+				}
+			else if (data3 > data2 && data2 > data4 && data4 > data5){
+					calc_result = 30;
+				}
+			else if (data3 > data4 && data4 > data2 && data2 > data5){
+					calc_result = 90;
+				}
+			else if (data4 > data3 && data3 > data5 && data5 > data2){
+					calc_result = 120;
+				}
+			else if (data4 > data5 && data5 > data3 && data3 > data2){
+					calc_result = 180;
+				}
+			else if (data5 > data4 && data4 > data2 && data2 > data3){
+					calc_result = 210;
+				}
+    	else{
+				report_timer_fired();
+    		}
+			}
+
+		post uartSendTask();			//Send calc_result to PC (Uart)
 		//post radioSendTask();	
 		call ADCRead.read();
 	}
 
 
-  event void RadioControl.startDone(error_t error) {
-		if (error != SUCCESS) {
+  event void RadioControl.startDone(error_t error) {		//attempted to start radio communication
+		if (error != SUCCESS) {		//Retry if attempt failed
       report_problem();
 			call RadioControl.start();
 		}			
 
 	}
 
-	async event void Serial.receivedByte(uint8_t byte) {}
-	async event void Serial.receiveDone(uint8_t *buf, uint16_t len, error_t error) {}
+	async event void Serial.receivedByte(uint8_t byte) {/*Never used*/}
+	async event void Serial.receiveDone(uint8_t *buf, uint16_t len, error_t error) {
+		if (error != SUCCESS)		//red Led if receiving via ZigBee not successful
+			report_problem();
+	}
 	async event void Serial.sendDone(uint8_t *buf, uint16_t len, error_t error) {
-		if (error != SUCCESS)
+		if (error != SUCCESS)	//red Led if sending via UART not successful
 			report_problem();
 	}
 
@@ -157,32 +156,18 @@ implementation
 *	Communication Sensors (ZigBee) -> Master (ZigBee)
 *
 */
- 
-  event message_t *RadioSnoop.receive[am_id_t id](message_t *msg,
-						    void *payload,
-						    uint8_t len) {
-    return receive(msg, payload, len);
-  }
   
-  event message_t *RadioReceive.receive[am_id_t id](message_t *msg,
-						    void *payload,
-						    uint8_t len) {
-    return receive(msg, payload, len);
-  }
-
-  message_t* receive(message_t *msg, void *payload, uint8_t len) {				
-		atomic
+  event message_t *RadioReceive.receive(message_t *msg, void *payload, uint8_t len) {	//Receiving ZigBee package
+    atomic
 		{
-			uint16_t buffer = 0;
-			am_addr_t addr = call RadioAMPacket.source(msg);
+			SensorValueMsg* pkt = (SensorValueMsg*)payload;		//Get pointer to package paylaod
+			uint8_t addr = pkt->node_id;		//Get node ID
 			//1: maser, 6: servor controller
 			if (addr-2 >= 0 && addr < SENSOR_NODE_COUNT+2) {	//Prevent pointing to wrong memory location due to corrupted packet source address
-				buffer = *((uint16_t*)payload);	//put message payload (16bit unsigned int) into array slot corresponding to node address-2.
-				if (buffer != 0xffff)			//0xffff means that the sensor node had problems reading the sensor value
-					nodePayload[addr-2] = buffer;
+				nodePayload[addr-2] = pkt->value; //put message payload (16bit unsigned int) into array slot corresponding to node address-2.
 			}
 		}
-		report_received();
+		report_received();	//Green LED
 		return msg;
   }
 
@@ -192,13 +177,13 @@ implementation
 *
 */
   
-  task void uartSendTask() {
+  task void uartSendTask() {		//Send data via UART to PC
 		uint8_t buf[15];		
 		atomic {
 			//Send calculated angle to PC
 			buf[0] = 0xee;
-			buf[1] = (uint8_t)result;		//Decompose 16bit result into two seperatee byte, MSB first
-			buf[2] = (uint8_t)(result >> 8);
+			buf[1] = (uint8_t)calc_result;		//Decompose 16bit calc_result into two seperatee byte, MSB first
+			buf[2] = (uint8_t)(calc_result >> 8);
 
 			//Send solar intensities to PC
 			buf[3] = 0xdd;
@@ -222,7 +207,7 @@ implementation
 *
 */
 
-  event void ADCRead.readDone( error_t result, uint16_t val )
+  event void ADCRead.readDone( error_t result, uint16_t val )		//ADC connected to solar panel read
   {
     if (result == SUCCESS){
 			solar = val;
@@ -231,28 +216,6 @@ implementation
 
   async command const msp430adc12_channel_config_t* config.getConfiguration()
   {
-    return &configVal; // must not be changed
+    return &configVal; // configuration for ADC
   }
-
-/*
-*
-*	Communication Master (ZigBee) -> Servo (ZigBee)		OBSOLETE: Servo control now over PC
-*
-*/
-
-/* task void radioSendTask() {
-		uint8_t len;
-		uint16_t* pl;
-    message_t pkt;
-    
-    atomic {
-			len = 2;
-			pl = (uint16_t*)call RadioPacket.getPayload(&pkt, len);	//Get pointer to payload of the message
-			*pl = result;		//Write result of calculation to payload
-			
-			call RadioSend.send[0](SENSOR_NODE_COUNT+2, &pkt, len);	//Send result to Servo node, has highest address (=SENSOR_NODE_COUNT+2)
-		}
-	}
-
-  event void RadioSend.sendDone[am_id_t id](message_t* msg, error_t error) {} */
-}  
+}
