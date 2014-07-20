@@ -16,7 +16,7 @@
 
 #include "AM.h"
 #include "Serial.h"
-#include "Timer.h"
+//#include "Timer.h"
 #include "Msp430Adc12.h"
 #include "SensorValue.h"
 
@@ -35,7 +35,7 @@ module MasterP @safe() {
 
 		interface Read<uint16_t> as ADCRead;
 
-		interface Timer<TMilli> as Timer0;
+		//interface Timer<TMilli> as Timer0;
 
     interface Leds;
   }
@@ -62,12 +62,16 @@ implementation
 	uint16_t nodePayload[SENSOR_NODE_COUNT];	//Payload of last package from nodes with address 2 TO SENSOR_NODE_COUNT+2
   uint16_t calc_result = 0;		//Result of sun pos. calculation
 	uint16_t solar = 0;		//Read ADC value form solar panel
+	uint8_t lastUpdatedNode = 0;
+	//uint16_t serialTaskAction = 0; // 0: sun data; 1: ADC voltage
 
   void report_problem() { call Leds.led0Toggle(); }		//Red
   void report_received() { call Leds.led1Toggle(); }			//Green
   void report_timer_fired() { call Leds.led2Toggle(); }	//Blue
 
   task void uartSendTask();
+
+	task void calculateResultTask();
 
 	event void Boot.booted() {
 		uint8_t i; 
@@ -79,53 +83,14 @@ implementation
 
 		call SerialControl.start();		//Start serial connection to PC
 
-		call Timer0.startPeriodic(CALCULATION_PERIOD);		//start the timer
+		//call Timer0.startPeriodic(CALCULATION_PERIOD);		//start the timer
 	}
 
-	event void Timer0.fired() {		//Timer interrupt
-		uint16_t data2, data3, data4, data5;
-		data2 = nodePayload[0];
-	  data3 = nodePayload[1];
-		data4 = nodePayload[2];
-		data5 = nodePayload[3];
-
-		//Algorithm to calculate sun position from sensor values
-
-		if (data2 != 0 && data3 != 0 && data4 != 0 && data5 != 0 )
-		{
-			if (data5 > data2 && data2 > data4 && data4 > data3){
-				calc_result = 270;
-			}
-			else if (data2 > data5 && data5 > data3 && data3 > data4){
-					calc_result = 295;
-				}
-			else if (data2 > data3 && data3 > data5 && data5 > data4){
-					calc_result = 0;
-				}
-			else if (data3 > data2 && data2 > data4 && data4 > data5){
-					calc_result = 30;
-				}
-			else if (data3 > data4 && data4 > data2 && data2 > data5){
-					calc_result = 90;
-				}
-			else if (data4 > data3 && data3 > data5 && data5 > data2){
-					calc_result = 120;
-				}
-			else if (data4 > data5 && data5 > data3 && data3 > data2){
-					calc_result = 180;
-				}
-			else if (data5 > data4 && data4 > data2 && data2 > data3){
-					calc_result = 210;
-				}
-    	else{
-				report_timer_fired();
-    		}
-			}
-
-		post uartSendTask();			//Send calc_result to PC (Uart)
-		//post radioSendTask();	
+	/*event void Timer0.fired() {		//Timer interrupt		
 		call ADCRead.read();
-	}
+		serialTaskAction = 1;
+		post uartSendTask();			//Send calc_result to PC (Uart)
+	}*/
 
 
   event void RadioControl.startDone(error_t error) {		//attempted to start radio communication
@@ -163,13 +128,63 @@ implementation
 			SensorValueMsg* pkt = (SensorValueMsg*)payload;		//Get pointer to package paylaod
 			uint8_t addr = pkt->node_id;		//Get node ID
 			//1: maser, 6: servor controller
-			if (addr-2 >= 0 && addr < SENSOR_NODE_COUNT+2) {	//Prevent pointing to wrong memory location due to corrupted packet source address
+			if (addr-2 >= 0 && addr < SENSOR_NODE_COUNT+2 && pkt->value != 0xffff) {	//Prevent pointing to wrong memory location due to corrupted packet source address and wrong calculation due to corrupted sensor value (0xffff)
 				nodePayload[addr-2] = pkt->value; //put message payload (16bit unsigned int) into array slot corresponding to node address-2.
+				lastUpdatedNode = addr;
 			}
 		}
+		
 		report_received();	//Green LED
+		call ADCRead.read(); //Read soar ADC
+		post calculateResultTask();	//Calc new sun position
 		return msg;
   }
+
+	task void calculateResultTask() {
+		// --------------------
+		// sun angle calc
+		// --------------------
+		uint16_t data2, data3, data4, data5;
+		data2 = nodePayload[0];
+  	data3 = nodePayload[1];
+		data4 = nodePayload[2];
+		data5 = nodePayload[3];
+		if (data2 != 0 && data3 != 0 && data4 != 0 && data5 != 0 )
+		{
+			if (data5 > data2 && data2 > data4 && data4 > data3){
+				calc_result = 270;
+			}
+			else if (data2 > data5 && data5 > data3 && data3 > data4){
+					calc_result = 295;
+				}
+			else if (data2 > data3 && data3 > data5 && data5 > data4){
+					calc_result = 0;
+				}
+			else if (data3 > data2 && data2 > data4 && data4 > data5){
+					calc_result = 30;
+				}
+			else if (data3 > data4 && data4 > data2 && data2 > data5){
+					calc_result = 90;
+				}
+			else if (data4 > data3 && data3 > data5 && data5 > data2){
+					calc_result = 120;
+				}
+			else if (data4 > data5 && data5 > data3 && data3 > data2){
+					calc_result = 180;
+				}
+			else if (data5 > data4 && data4 > data2 && data2 > data3){
+					calc_result = 210;
+				}
+	  	else{
+				report_timer_fired();
+	  		}
+		}
+
+		//SerialTaskAction = 0;
+		post uartSendTask();			//Send result to PC (Uart)
+	}
+
+
 
 /*
 *
@@ -178,28 +193,58 @@ implementation
 */
   
   task void uartSendTask() {		//Send data via UART to PC
-		uint8_t buf[15];		
+		uint8_t buf[9];		
 		atomic {
-			//Send calculated angle to PC
-			buf[0] = 0xee;
-			buf[1] = (uint8_t)calc_result;		//Decompose 16bit calc_result into two seperatee byte, MSB first
-			buf[2] = (uint8_t)(calc_result >> 8);
-
-			//Send solar intensities to PC
-			buf[3] = 0xdd;
-			buf[4] = (uint8_t)nodePayload[0];
-			buf[5] = (uint8_t)(nodePayload[0] >> 8);
-			buf[6] = (uint8_t)nodePayload[1];
-			buf[7] = (uint8_t)(nodePayload[1] >> 8);
-			buf[8] = (uint8_t)nodePayload[2];
-			buf[9] = (uint8_t)(nodePayload[2] >> 8);
-			buf[10] = (uint8_t)nodePayload[3];
-			buf[11] = (uint8_t)(nodePayload[3] >> 8);
-			buf[12] = 0xcc;
-			buf[13] = (uint8_t)solar;
-			buf[14] = (uint8_t)(solar >> 8);
+			// 0xee
+			// last updated node nr
+			// measured intensity of node
+			// calculated angle
+			//0xdd			
+			// send sun data
+			buf[0] = 0xee;			
+			buf[1] = (uint8_t)lastUpdatedNode;
+			buf[2] = (uint8_t)nodePayload[lastUpdatedNode-2];
+			buf[3] = (uint8_t)(nodePayload[lastUpdatedNode-2] >> 8);
+			buf[4] = (uint8_t)calc_result;	//Decompose 16bit calc_result into two seperatee byte, MSB first
+			buf[5] = (uint8_t)(calc_result >> 8);			
+			buf[6] = 0xdd;
+			buf[7] = (uint8_t)solar;
+			buf[8] = (uint8_t)(solar >> 8);
 		} 
-		call Serial.send(buf, 15);	//Send the 8 byte via uart to PC
+		call Serial.send(buf, 9);	//Send the 8 byte via uart to PC
+
+  /*task void uartSendTask() {
+	atomic
+	{
+		if(serialTaskAction == 0)
+		{
+			// send sun data
+			// 0xee
+			// last updated node nr
+			// measured intensity of node
+			// calculated angle
+			uint8_t buf[7];
+			buf[0] = 0xee;
+			buf[1] = (uint8_t)lastUpdatedNode;
+			buf[2] = (uint8_t)(lastUpdatedNode >> 8);
+			buf[3] = (uint8_t)nodePayload[lastUpdatedNode];
+			buf[4] = (uint8_t)(nodePayload[lastUpdatedNode] >> 8);
+			buf[5] = (uint8_t)result;	
+			buf[6] = (uint8_t)(result >> 8);
+
+			call Serial.send(buf, 7);	//Send the bytes via uart to PC
+		}
+		else
+		{
+			// send ADC val
+			uint8_t buf[3];
+			buf[0] = 0xdd;
+			buf[1] = (uint8_t)solar;
+			buf[2] = (uint8_t)(solar >> 8);
+
+			call Serial.send(buf, 3);	//Send the bytes via uart to PC
+		}
+	}*/
   }
 
 /*
@@ -219,3 +264,4 @@ implementation
     return &configVal; // configuration for ADC
   }
 }
+

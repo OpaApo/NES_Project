@@ -81,6 +81,11 @@ namespace NES_Suntracker_Console
             intens4_txtbx.Text = cm.GetSolarIntensities()[3].ToString();
 
             solarvoltage_txtbx.Text = cm.GetSolarvoltage().ToString() + "V";
+
+            lastUpdate1_txtbx.Text = (DateTime.Now - cm.GetLastUpdateTime()[0]).Seconds.ToString() + "s";
+            lastUpdate2_txtbx.Text = (DateTime.Now - cm.GetLastUpdateTime()[1]).Seconds.ToString() + "s";
+            lastUpdate3_txtbx.Text = (DateTime.Now - cm.GetLastUpdateTime()[2]).Seconds.ToString() + "s";
+            lastUpdate4_txtbx.Text = (DateTime.Now - cm.GetLastUpdateTime()[3]).Seconds.ToString() + "s";
         }
     }
 }

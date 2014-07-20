@@ -13,13 +13,13 @@ namespace NES_Suntracker_Console
         SerialPort serialPort_actuator;
         SerialPort serialPort_masternode;
 
-        private bool trackerOverride = false;
-        private DateTime lastUpdated = new DateTime();
+        private bool trackerOverride = true;
+        private DateTime[] lastUpdated = new DateTime[4];
         private Int16[] solarIntensities = new Int16[4];
         private Int16 sunAngle;
         private double solarVoltage;
 
-        internal DateTime GetLastUpdateTime()
+        internal DateTime[] GetLastUpdateTime()
         {
             return lastUpdated;
         }
@@ -72,65 +72,40 @@ namespace NES_Suntracker_Console
         void serialPort_masternode_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             serialPort_masternode.DataReceived -= serialPort_masternode_DataReceived;
-            byte[] recvBuffer = new byte[15];
 
-            serialPort_masternode.Read(recvBuffer, 0, 15);
-            lastUpdated = DateTime.Now;
+            byte[] firstReceived = new byte[1];
+            serialPort_masternode.Read(firstReceived, 0, 1);
 
-            //Bad coding style but time is a scare ressource...
-            if (recvBuffer[0] == 0xee)
+            if(firstReceived[0] == 0xee) // sun data
             {
-                byte[] receivedAngle = new byte[2];
-                receivedAngle[0] = recvBuffer[1];
-                receivedAngle[1] = recvBuffer[2];
-                sunAngle = BitConverter.ToInt16(receivedAngle, 0);
+                byte[] recvBuffer = new byte[6];
+                serialPort_masternode.Read(recvBuffer, 0, 6);
 
-                if (!trackerOverride)
-                    SendActuatorPosition(sunAngle);
+                byte[] receivedNodeAdr = new byte[2];
+                receivedNodeAdr[0] = recvBuffer[0];
+                receivedNodeAdr[1] = recvBuffer[1];
+                Int16 nodeID = BitConverter.ToInt16(receivedNodeAdr, 0);
+                lastUpdated[nodeID] = DateTime.Now;
+
+                byte[] intens = new byte[2];
+                intens[0] = recvBuffer[2];
+                intens[1] = recvBuffer[3];
+                solarIntensities[nodeID] = BitConverter.ToInt16(intens, 0);
+
+                byte[] recvAngle = new byte[2];
+                recvAngle[0] = recvBuffer[4];
+                recvAngle[1] = recvBuffer[5];
+                sunAngle = BitConverter.ToInt16(recvAngle, 0);
             }
-            else
-                sunAngle = -1; // Error inducator
-
-            if (recvBuffer[3] == 0xdd)
+            else if(firstReceived[0] == 0xdd) // ADC val
             {
-                byte[] intens1 = new byte[2];
-                intens1[0] = recvBuffer[4];
-                intens1[1] = recvBuffer[5];
-                solarIntensities[0] = BitConverter.ToInt16(intens1, 0);
-
-                byte[] intens2 = new byte[2];
-                intens2[0] = recvBuffer[6];
-                intens2[1] = recvBuffer[7];
-                solarIntensities[1] = BitConverter.ToInt16(intens2, 0);
-
-                byte[] intens3 = new byte[2];
-                intens3[0] = recvBuffer[8];
-                intens3[1] = recvBuffer[9];
-                solarIntensities[2] = BitConverter.ToInt16(intens3, 0);
-
-                byte[] intens4 = new byte[2];
-                intens4[0] = recvBuffer[10];
-                intens4[1] = recvBuffer[11];
-                solarIntensities[3] = BitConverter.ToInt16(intens4, 0);
+                byte[] recvBuffer = new byte[2];
+                serialPort_masternode.Read(recvBuffer, 0, 2);
+                double vSteps = 1.5 / 4095; // ADC voltage step
+                solarVoltage = Math.Round(BitConverter.ToInt16(recvBuffer, 0) * vSteps, 3);
             }
-            else
-            {
-                //Error indicator
-                for (int i = 0; i < 4; i++)
-                    solarIntensities[i] = -1;
-            }
-            if (recvBuffer[12] == 0xcc)
-            {
-                double vSteps = 1.5/4095; // ADC voltage step
-                byte[] solarV = new byte[2];
-                solarV[0] = recvBuffer[13];
-                solarV[1] = recvBuffer[14];
-                solarVoltage = Math.Round(BitConverter.ToInt16(solarV,0) * vSteps,3);
-            }
-            else
-                solarVoltage = -1;
 
-            serialPort_masternode.DiscardInBuffer();
+            serialPort_masternode.DiscardInBuffer(); // clean up whatever errorneus data is still in here
             serialPort_masternode.DataReceived += serialPort_masternode_DataReceived;
         }
 

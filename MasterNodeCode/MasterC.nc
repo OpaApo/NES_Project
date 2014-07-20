@@ -23,7 +23,7 @@ implementation {
 
   MasterP.RadioReceive -> AMReceiverC;
 
-  MasterP.Timer0 -> Timer0;
+  //MasterP.Timer0 -> Timer0;
   
   MasterP.Leds -> LedsC;
 }
