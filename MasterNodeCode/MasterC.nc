@@ -22,8 +22,6 @@ implementation {
   ADC.AdcConfigure -> MasterP.config;
 
   MasterP.RadioReceive -> AMReceiverC;
-
-  //MasterP.Timer0 -> Timer0;
   
   MasterP.Leds -> LedsC;
 }
