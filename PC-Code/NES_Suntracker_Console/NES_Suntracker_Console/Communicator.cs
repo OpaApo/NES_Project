@@ -73,38 +73,36 @@ namespace NES_Suntracker_Console
         {
             serialPort_masternode.DataReceived -= serialPort_masternode_DataReceived;
 
-            byte[] firstReceived = new byte[1];
-            serialPort_masternode.Read(firstReceived, 0, 1);
+            byte[] received = new byte[8];
+            serialPort_masternode.Read(received, 0, 8);
 
-            if(firstReceived[0] == 0xee) // sun data
+            if (received[0] == 0xee)
             {
-                byte[] recvBuffer = new byte[6];
-                serialPort_masternode.Read(recvBuffer, 0, 6);
-
                 byte[] receivedNodeAdr = new byte[2];
-                receivedNodeAdr[0] = recvBuffer[0];
-                receivedNodeAdr[1] = recvBuffer[1];
+                receivedNodeAdr[0] = received[1];
+                receivedNodeAdr[1] = 0;
                 Int16 nodeID = BitConverter.ToInt16(receivedNodeAdr, 0);
                 lastUpdated[nodeID] = DateTime.Now;
 
                 byte[] intens = new byte[2];
-                intens[0] = recvBuffer[2];
-                intens[1] = recvBuffer[3];
+                intens[0] = received[2];
+                intens[1] = received[3];
                 solarIntensities[nodeID] = BitConverter.ToInt16(intens, 0);
 
                 byte[] recvAngle = new byte[2];
-                recvAngle[0] = recvBuffer[4];
-                recvAngle[1] = recvBuffer[5];
+                recvAngle[0] = received[4];
+                recvAngle[1] = received[5];
                 sunAngle = BitConverter.ToInt16(recvAngle, 0);
-            }
-            else if(firstReceived[0] == 0xdd) // ADC val
-            {
-                byte[] recvBuffer = new byte[2];
-                serialPort_masternode.Read(recvBuffer, 0, 2);
-                double vSteps = 1.5 / 4095; // ADC voltage step
-                solarVoltage = Math.Round(BitConverter.ToInt16(recvBuffer, 0) * vSteps, 3);
-            }
 
+                byte[] solarADC = new byte[2];
+                solarADC[0] = received[6];
+                solarADC[1] = received[7];
+                double vSteps = 1.5 / 4095; // ADC voltage step
+                solarVoltage = Math.Round(BitConverter.ToInt16(solarADC, 0) * vSteps, 3);
+
+                if (!trackerOverride)
+                    SendActuatorPosition(sunAngle);
+            }
             serialPort_masternode.DiscardInBuffer(); // clean up whatever errorneus data is still in here
             serialPort_masternode.DataReceived += serialPort_masternode_DataReceived;
         }
