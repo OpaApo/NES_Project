@@ -19,7 +19,7 @@
 #include "Msp430Adc12.h"
 #include "SensorValue.h"
 
-module MasterP @safe() {
+module MasterPSimple @safe() {
   provides {
     interface AdcConfigure<const msp430adc12_channel_config_t*> as config;
   }
@@ -142,42 +142,46 @@ implementation
 		// --------------------
 		uint16_t data2, data3, data4, data5;
 		data2 = nodePayload[0];
-  	data3 = nodePayload[1];
+	  	data3 = nodePayload[1];
 		data4 = nodePayload[2];
 		data5 = nodePayload[3];
-		if (data2 != 0 && data3 != 0 && data4 != 0 && data5 != 0 )
-		{
-			if (data5 > data2 && data2 > data4 && data4 > data3){
-				calc_result = 270;
-			}
-			else if (data2 > data5 && data5 > data3 && data3 > data4){
-				calc_result = 295;
-			}
-			else if (data2 > data3 && data3 > data5 && data5 > data4){
-				calc_result = 0;
-			}
-			else if (data3 > data2 && data2 > data4 && data4 > data5){
-				calc_result = 30;
-			}
-			else if (data3 > data4 && data4 > data2 && data2 > data5){
-				calc_result = 90;
-			}
-			else if (data4 > data3 && data3 > data5 && data5 > data2){
-				calc_result = 120;
-			}
-			else if (data4 > data5 && data5 > data3 && data3 > data2){
-				calc_result = 180;			
-			}
-			else if (data5 > data4 && data4 > data2 && data2 > data3){
-				calc_result = 210;
-			}
-	  	else {
-				report_calc_error();
-	  	}
-		}
 
-		//SerialTaskAction = 0;
-		post uartSendTask();			//Send result to PC (Uart)
+		//report_timer_fired();
+		
+		atomic {
+			if (data2 != 0 && data3 != 0 && data4 != 0 && data5 != 0 )
+			{
+				if (data5 > data2 && data2 > data4 && data4 > data3){
+					calc_result = 270;
+				}
+				else if (data2 > data5 && data5 > data3 && data3 > data4){
+						calc_result = 295;
+					}
+				else if (data2 > data3 && data3 > data5 && data5 > data4){
+						calc_result = 0;
+					}
+				else if (data3 > data2 && data2 > data4 && data4 > data5){
+						calc_result = 30;
+					}
+				else if (data3 > data4 && data4 > data2 && data2 > data5){
+						calc_result = 90;
+					}
+				else if (data4 > data3 && data3 > data5 && data5 > data2){
+						calc_result = 120;
+					}
+				else if (data4 > data5 && data5 > data3 && data3 > data2){
+						calc_result = 180;
+					}
+				else if (data5 > data4 && data4 > data2 && data2 > data3){
+						calc_result = 210;
+					}
+			    	else{
+					report_calc_error();
+		      		}
+  			}
+		}
+		post uartSendTask();			//Send calc_result to PC (Uart)
+		//post radioSendTask();	
 	}
 
 
